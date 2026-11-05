@@ -103,6 +103,7 @@ input[type=range]{width:100%;accent-color:var(--coral);height:32px}
 .choice:hover:not([disabled]){color:#14235E}
 .choice.ok{background:var(--good-bg);color:var(--good);border-color:var(--good)}
 .choice.ko{background:var(--bad-bg);color:var(--bad);border-color:var(--bad)}
+.choice.long{border-radius:14px;text-align:left}
 .fb{font-size:.97rem;line-height:1.45}
 .score{font:400 1.2rem/1.2 var(--display)}
 .cine{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:10px}
@@ -219,7 +220,7 @@ footer{padding-top:30px;display:flex;flex-direction:column;gap:12px}
 <script>
 (function(){
 var KEY='bac-a-sable-v1';
-var S={before:6,after:null,done:{},game:{},recipe:'',cine:{},thought:'',friend:'',k1:'',k2:'',k3:'',habits:{}};
+var S={before:6,after:null,done:{},game:{},recipe:'',cine:{},thought:'',friend:'',k1:'',k2:'',k3:'',habits:{},round:{}};
 try{var saved=JSON.parse(localStorage.getItem(KEY));if(saved)S=Object.assign(S,saved)}catch(e){}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
 var app=document.getElementById('app');
@@ -354,14 +355,14 @@ function finish(i){
 }
 
 /* Moteur de quiz */
-function quizHTML(id,items){
+function quizHTML(id,items,long){
   return items.map(function(q,i){
     var st=(S.game[id]||{})[i];
     return '<div class="q" data-q="'+i+'"><p><b>'+q.q+'</b></p><div class="choices">'+q.c.map(function(c,j){
       var cls='';if(st!=null){if(j===q.a)cls=' ok';else if(j===st)cls=' ko'}
-      return '<button type="button" class="choice'+cls+'" data-quiz="'+id+'" data-i="'+i+'" data-j="'+j+'"'+(st!=null?' disabled':'')+'>'+c+'</button>'}).join('')+
+      return '<button type="button" class="choice'+(long?' long':'')+cls+'" data-quiz="'+id+'" data-i="'+i+'" data-j="'+j+'"'+(st!=null?' disabled':'')+'>'+c+'</button>'}).join('')+
       '</div><p class="fb" aria-live="polite">'+(st!=null?(st===q.a?'<b>Bien vu.</b> ':'<b>Pas tout à fait.</b> ')+q.e:'')+'</p></div>'}).join('')+
-    '<p class="score" id="score-'+id+'">'+scoreText(id,items)+'</p><div><button type="button" class="linkbtn" data-reset="'+id+'">Rejouer</button></div>';
+    '<p class="score" id="score-'+id+'">'+scoreText(id,items)+'</p><div><button type="button" class="linkbtn" data-reset="'+id+'">'+(BANK[id]?'Rejouer avec d’autres questions':'Rejouer')+'</button></div>';
 }
 function scoreText(id,items){
   var g=S.game[id]||{},answered=Object.keys(g).length,good=items.filter(function(q,i){return g[i]===q.a}).length;
@@ -384,13 +385,9 @@ var Q2=[
  {s:'Demander de l’aide',q:'Demander à un prof de réexpliquer un point',a:0,e:'Il suffit d’une question à la fin du cours.'},
  {s:'L’avis de ma tante',q:'Ce que ta tante pense de tes vœux',a:1,e:'Elle garde son avis. Tu choisis ce que tu en fais et le temps que tu y passes.'}
 ].map(function(o){o.c=['Ça dépend de moi','Ça ne dépend pas de moi'];return o});
-var Q4=[
- {q:'« Si je rate ce DS, ma vie est fichue. »',a:0,e:'Le catastrophisme saute directement au pire scénario. Un DS reste une note parmi beaucoup d’autres.'},
- {q:'« Le prof m’a regardé bizarrement, il me trouve nul. »',a:1,e:'La lecture de pensée invente ce que l’autre se dit. Il avait peut-être juste mal dormi.'},
- {q:'« Soit j’ai 18, soit je suis une catastrophe. »',a:2,e:'Le tout ou rien efface tout ce qui existe entre les deux, et c’est là que vivent la plupart des notes.'},
- {q:'« J’ai raté un exercice de maths, je rate toujours tout. »',a:3,e:'La surgénéralisation transforme un cas en règle. Cherche une seule exception et la règle tombe.'}
-].map(function(o){o.c=['Catastrophisme','Lecture de pensée','Tout ou rien','Surgénéralisation'];return o});
-var QUIZ={q1:Q1,q2:Q2,q4:Q4};
+var BANK={q4:[{"q": "« Si je rate ce DS, ma vie est fichue. »", "c": ["Catastrophisme", "Lecture de pensée", "Tout ou rien", "Surgénéralisation"], "a": 0, "e": "Le catastrophisme saute directement au pire scénario. Un DS reste une note parmi beaucoup d’autres."}, {"q": "« Le prof m’a regardé bizarrement, il me trouve nul. »", "c": ["Catastrophisme", "Lecture de pensée", "Tout ou rien", "Surgénéralisation"], "a": 1, "e": "La lecture de pensée invente ce que l’autre se dit. Il avait peut-être juste mal dormi."}, {"q": "« Soit j’ai 18, soit je suis une catastrophe. »", "c": ["Catastrophisme", "Lecture de pensée", "Tout ou rien", "Surgénéralisation"], "a": 2, "e": "Le tout ou rien efface tout ce qui existe entre les deux, et c’est là que vivent la plupart des notes."}, {"q": "« J’ai raté un exercice de maths, je rate toujours tout. »", "c": ["Catastrophisme", "Lecture de pensée", "Tout ou rien", "Surgénéralisation"], "a": 3, "e": "La surgénéralisation transforme un cas en règle. Cherche une seule exception et la règle tombe."}, {"q": "« Personne ne m’a répondu dans le groupe : ils en ont marre de moi. »", "c": ["Catastrophisme", "Lecture de pensée", "Tout ou rien", "Surgénéralisation"], "a": 1, "e": "Tu ne connais pas leurs raisons. Ils sont peut-être simplement occupés."}, {"q": "« Sans ce vœu sur Parcoursup, je n’aurai aucun avenir. »", "c": ["Catastrophisme", "Lecture de pensée", "Tout ou rien", "Surgénéralisation"], "a": 0, "e": "Un vœu compte, mais il existe plusieurs chemins vers un même métier."}, {"q": "« J’ai bafouillé une fois à l’oral blanc, je suis toujours nul à l’oral. »", "c": ["Catastrophisme", "Lecture de pensée", "Tout ou rien", "Surgénéralisation"], "a": 3, "e": "Un oral raté ne définit pas tous les autres. Pense à une prise de parole qui s’est bien passée."}, {"q": "« Si je n’ai pas la mention, autant ne rien avoir. »", "c": ["Catastrophisme", "Lecture de pensée", "Tout ou rien", "Surgénéralisation"], "a": 2, "e": "Entre la mention et rien, il y a beaucoup de réussites possibles."}, {"q": "« Mes parents n’ont rien dit sur mon bulletin : ils sont forcément déçus. »", "c": ["Catastrophisme", "Lecture de pensée", "Tout ou rien", "Surgénéralisation"], "a": 1, "e": "Leur silence peut vouloir dire beaucoup de choses. Le plus simple est de leur demander."}, {"q": "« Si je suis un peu en retard dans mes révisions, je vais tout rater au bac. »", "c": ["Catastrophisme", "Lecture de pensée", "Tout ou rien", "Surgénéralisation"], "a": 0, "e": "Un retard se rattrape par morceaux. Le pire n’est pas le plus probable."}, {"q": "« Je n’ai pas tout compris au chapitre, donc je n’ai rien compris. »", "c": ["Catastrophisme", "Lecture de pensée", "Tout ou rien", "Surgénéralisation"], "a": 2, "e": "Note ce que tu as compris et ce qui reste à revoir. Tu verras que ce n’est pas rien."}, {"q": "« Tous mes amis ont déjà trouvé leur voie, il n’y a que moi qui ne sais jamais quoi faire. »", "c": ["Catastrophisme", "Lecture de pensée", "Tout ou rien", "Surgénéralisation"], "a": 3, "e": "« Tous » et « jamais » exagèrent. Beaucoup de gens hésitent sans le dire."}],q5:[{"q": "Ton ami te dit : « J’ai 7 en philo, je n’aurai jamais le bac. » Que lui réponds-tu ?", "c": ["« C’est clair, c’est mal parti pour toi. »", "« Un 7, ça pique. Regardons ce qui a coincé, il reste du temps pour progresser. »", "« Ne t’inquiète pas, tu l’auras forcément. »"], "a": 1, "e": "Tu reconnais que c’est difficile sans exagérer, puis tu proposes une action."}, {"q": "Ton amie te dit : « Je n’ai aucune idée de ce que je veux faire, je suis perdue. » Que lui réponds-tu ?", "c": ["« Beaucoup de gens hésitent. On peut commencer par lister ce qui te plaît ? »", "« Dépêche-toi de choisir, c’est bientôt fini. »", "« Choisis comme tout le monde. »"], "a": 0, "e": "L’hésitation devient plus facile à vivre quand on la découpe en petites étapes."}, {"q": "Ton ami te dit : « Je vais me planter à l’oral, je bafouille toujours. » Que lui réponds-tu ?", "c": ["« Oui, tu bafouilles beaucoup. »", "« Arrête d’y penser. »", "« Avoir le trac, c’est normal. Tu veux t’entraîner devant moi ? »"], "a": 2, "e": "Dire « arrête d’y penser » aide rarement. S’entraîner rend la situation plus familière."}, {"q": "Ton amie te dit : « Tout le monde est meilleur que moi dans cette classe. » Que lui réponds-tu ?", "c": ["« Tu as raison, le niveau est élevé. »", "« On voit surtout les réussites des autres. Quels progrès as-tu faits cette année ? »", "« Les autres ne valent rien, ne les écoute pas. »"], "a": 1, "e": "Comparer ses progrès à soi-même est plus juste que se comparer aux autres."}, {"q": "Ton ami te dit : « Une formation m’a refusé, je ne vaux rien. » Que lui réponds-tu ?", "c": ["« Un refus juge un dossier, pas ta valeur. On regarde tes autres vœux ? »", "« Ils ont dû voir que ton dossier était mauvais. »", "« Laisse tomber Parcoursup. »"], "a": 0, "e": "Tu sépares le refus de la personne et tu ramènes vers ce qui reste possible."}, {"q": "Ton amie te dit : « Je dors mal et je stresse tout le temps depuis des semaines. » Que lui réponds-tu ?", "c": ["« Comme tout le monde en terminale. »", "« Bois un café et ça ira. »", "« Ça a l’air lourd. Tu veux qu’on en parle, ou qu’on aille voir l’infirmière ensemble ? »"], "a": 2, "e": "Quand ça dure, écouter et proposer d’aller voir un adulte est une vraie aide."}]},PER={q4:4,q5:2};
+var QUIZ={q1:Q1,q2:Q2};
+function cur(id){var b=BANK[id];if(!b)return QUIZ[id];var n=PER[id],r=(S.round[id]||0),st=(r*n)%b.length,o=[];for(var i=0;i<n;i++)o.push(b[(st+i)%b.length]);return o}
 
 var CINE=[
  {k:'C',t:'Contrôle faible',d:'Tu as peu de prise sur ce qui se passe. Exemple : attendre une réponse.',tip:'Fais deux colonnes : ce que je peux faire, ce qui ne dépend pas de moi. Choisis une seule action dans la première.'},
@@ -434,7 +431,8 @@ var VIEWS={
   '</div></section>'+finish(2)+'</div>'},
  'etape-4':function(){return shellHead(3)+'<div class="stack-l">'+
   '<section class="prose"><p>Une pensée stressante a souvent l’air d’un fait. Pourtant, c’est une phrase, et elle exagère parfois. Les psychologues parlent de distorsions cognitives. Tout le monde en fait. Les repérer te donne un peu de recul.</p></section>'+
-  '<section class="game"><h2>Attrape la pensée piège</h2>'+quizHTML('q4',Q4)+'</section>'+
+  '<section class="game"><h2>Attrape la pensée piège</h2>'+quizHTML('q4',cur('q4'))+'</section>'+
+  '<section class="game"><h2>Que dirais-tu à ton meilleur ami ?</h2><p>Choisis la réponse la plus utile.</p>'+quizHTML('q5',cur('q5'),true)+'</section>'+
   '<section class="game"><h2>Le conseil à ton meilleur ami</h2><p>On est souvent plus juste avec les autres qu’avec soi-même. Profitons-en.</p>'+
   '<label class="f" for="thought">La phrase que ta tête te répète<textarea id="thought" rows="2" maxlength="240" placeholder="Exemple : je n’y arriverai jamais">'+esc(S.thought)+'</textarea></label>'+
   '<label class="f" for="friend">Que répondrais-tu à un ami qui te dirait ça ?<textarea id="friend" rows="3" maxlength="320" placeholder="Exemple : tu as déjà remonté une note cette année, et il te reste du temps">'+esc(S.friend)+'</textarea></label>'+
@@ -517,14 +515,14 @@ document.addEventListener('click',function(ev){
   if(t.hasAttribute('data-go')){go(t.getAttribute('data-go'));return}
   if(t.hasAttribute('data-help')||t.id==='helpbtn'){showHelp();return}
   if(t.dataset.quiz){
-    var id=t.dataset.quiz,i=+t.dataset.i,j=+t.dataset.j,items=QUIZ[id];
+    var id=t.dataset.quiz,i=+t.dataset.i,j=+t.dataset.j,items=cur(id);
     S.game[id]=S.game[id]||{};S.game[id][i]=j;save();
     var q=t.closest('.q');
     q.querySelectorAll('.choice').forEach(function(b,k){b.disabled=true;if(k===items[i].a)b.classList.add('ok');else if(k===j)b.classList.add('ko')});
     q.querySelector('.fb').innerHTML=(j===items[i].a?'<b>Bien vu.</b> ':'<b>Pas tout à fait.</b> ')+items[i].e;
     document.getElementById('score-'+id).textContent=scoreText(id,items);if(id==='q2')document.getElementById('piles').innerHTML=pilesHTML();return;
   }
-  if(t.dataset.reset){delete S.game[t.dataset.reset];save();var y=window.scrollY;render();window.scrollTo(0,y);return}
+  if(t.dataset.reset){if(BANK[t.dataset.reset])S.round[t.dataset.reset]=(S.round[t.dataset.reset]||0)+1;delete S.game[t.dataset.reset];save();var y=window.scrollY;render();window.scrollTo(0,y);return}
   if(t.dataset.finish!=null){
     var n=+t.dataset.finish;S.done[STEPS[n].id]=true;save();
     go(STEPS[n+1]?STEPS[n+1].id:'');return;
