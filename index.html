@@ -228,7 +228,6 @@ footer{padding-top:30px;display:flex;flex-direction:column;gap:12px}
 
 <script>
 (function(){
-var FORM_URL='https://docs.google.com/forms/d/e/1FAIpQLSe3brlNEwydum-jYyRNYjJYsWlqXitcLaXp8crCEP8Nw_U5ag/viewform';/* Coller ici l'adresse du Google Form : le bloc d'avis apparaîtra automatiquement. */
 var KEY='bac-a-sable-v1';
 var S={before:6,after:null,done:{},game:{},recipe:'',cine:{},thought:'',friend:'',k1:'',k2:'',k3:'',habits:{}};
 try{var saved=JSON.parse(localStorage.getItem(KEY));if(saved)S=Object.assign(S,saved)}catch(e){}
@@ -319,7 +318,6 @@ function home(){
       '<ol class="path">'+STEPS.map(function(s,i){return '<li><button type="button" class="stop'+(S.done[s.id]?' done':'')+'" data-go="'+s.id+'"><span class="num">'+bucket()+'<b>'+(i+1)+'</b></span><span><h3>'+s.t+'</h3><small>'+s.sub+'</small></span><span class="state">'+(S.done[s.id]?'Fait':s.min)+'</span></button></li>'}).join('')+'</ol>'+seaEnd(n)+
       (next?'<div><button type="button" class="btn" data-go="'+next.id+'">'+(n?'Continuer : ':'Commencer : ')+next.t+'</button></div>':'<div><button type="button" class="btn sea" data-go="etape-5">Revoir mon kit</button></div>')+
       '</section>'+
-      (n===5?avis():'')+
       helpBlock()+
       footer()+
     '</div>';
@@ -341,10 +339,6 @@ function helpBlock(){
   '<li><strong>Idées suicidaires, ou inquiétude pour quelqu’un</strong><br><span class="tel">3114</span>, gratuit, 24 h/24 et 7 j/7.</li>'+
   '<li><strong>Danger immédiat</strong><br><span class="tel">15</span> ou <span class="tel">112</span>.</li>'+
   '</ul><p class="note">Pour consulter sans frais : <a href="https://www.sante.fr/prendre-soin-de-la-sante-mentale-des-18-25-ans" target="_blank" rel="noopener">le dispositif Mon Soutien Psy</a> prend en charge jusqu’à 12 séances par an, selon la situation.</p></section>';
-}
-function avis(){
-  if(!FORM_URL)return '';
-  return '<section class="game"><h2>Ton avis fait évoluer le parcours</h2><p>Trois minutes, sans nom ni adresse e-mail. Dis-nous ce qui t’a aidé et ce qu’il faut changer.</p><p class="note">Le questionnaire n’est pas lu en direct. Si tu as besoin de parler à quelqu’un, utilise le bouton « Besoin de parler ? ».</p><div><a class="btn sea" style="text-decoration:none" href="'+FORM_URL+'" target="_blank" rel="noopener">Donner mon avis</a></div></section>';
 }
 function footer(){
   return '<footer class="sources"><details><summary><b>D’où viennent les contenus</b></summary><ul>'+
@@ -474,7 +468,7 @@ var VIEWS={
   '<label class="f" for="k3">Si c’est trop lourd, j’en parle à<input type="text" id="k3" maxlength="80" placeholder="Un prénom ou un rôle" value="'+esc(S.k3)+'"></label></section>'+
   '<section class="stack"><h2>Ta carte de plage</h2><div class="card" id="card"></div><div class="row left"><button type="button" class="btn alt" id="copy">Copier ma carte</button><span id="copied" class="note" aria-live="polite"></span></div></section>'+
   '<section class="game"><h2>Et ton crabe, maintenant ?</h2><div class="crab-box" id="box-after">'+crabSVG('crab2',S.after==null?S.before:S.after)+'</div><label for="s-after"><span class="big-num" id="v-after">'+(S.after==null?S.before:S.after)+' / 10</span></label><input type="range" id="s-after" min="0" max="10" value="'+(S.after==null?S.before:S.after)+'"><div class="scale"><span>Tout petit</span><span>Géant</span></div><p id="compare" aria-live="polite">'+compareText()+'</p></section>'+
-  avis()+finish(4)+'</div>'}
+  finish(4)+'</div>'}
 };
 function tipsHTML(){
   var on=CINE.filter(function(c){return S.cine[c.k]});
