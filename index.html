@@ -16,23 +16,13 @@ img{max-width:100%}
 
 /* Layout : une plage en coupe. Le ciel en haut, le sable en bas, un chemin de seaux qui descend vers la mer. */
 :root{
-  --sky:#BFE7FF; --sky-2:#E4F5FF; --sand:#FFD766; --sand-2:#FFEFB8; --ink:#14235E; --ink-2:#44507F;
+  --sky:#BFE7FF; --sky-2:#E4F5FF; color-scheme:light; --sand:#FFD766; --sand-2:#FFEFB8; --ink:#14235E; --ink-2:#44507F;
   --coral:#E8384F; --sea:#0B8C8C; --paper:#FFFFFF; --line:#14235E;
   --cloud:#FFFFFF; --sun:#FFB400; --wave:#37BCC8; --wave2:#0B8C8C; --on-coral:#FFFFFF; --on-sea:#FFFFFF; --crab:#F2495C; --crab-dark:#B42238;
   --good:#0A7A5A; --bad:#B42238; --good-bg:#D9F6EA; --bad-bg:#FFE3E6;
   --display:"Bagel Fat One","Arial Rounded MT Bold","Trebuchet MS",sans-serif;
   --body:"Atkinson Hyperlegible","Trebuchet MS",Verdana,sans-serif;
 }
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  --sky:#10194A; --sky-2:#18245F; --sand:#D9A93A; --sand-2:#2A2A52; --ink:#F4F2FF; --ink-2:#BFC5EA;
-  --coral:#FF7C8D; --sea:#4FD6CF; --paper:#1D2A69; --line:#8E9BE0;
-  --cloud:#2F3E8F; --sun:#F6E7A6; --wave:#1F7E8F; --wave2:#155B75; --on-coral:#2A0810; --on-sea:#032A2A; --crab:#FF7C8D; --crab-dark:#C93E52;
-  --good:#6FE7BD; --bad:#FF9AA7; --good-bg:#123F3C; --bad-bg:#4A1B33; color-scheme:dark}}
-:root[data-theme="dark"]{
-  --sky:#10194A; --sky-2:#18245F; --sand:#D9A93A; --sand-2:#2A2A52; --ink:#F4F2FF; --ink-2:#BFC5EA;
-  --coral:#FF7C8D; --sea:#4FD6CF; --paper:#1D2A69; --line:#8E9BE0;
-  --cloud:#2F3E8F; --sun:#F6E7A6; --wave:#1F7E8F; --wave2:#155B75; --on-coral:#2A0810; --on-sea:#032A2A; --crab:#FF7C8D; --crab-dark:#C93E52;
-  --good:#6FE7BD; --bad:#FF9AA7; --good-bg:#123F3C; --bad-bg:#4A1B33; color-scheme:dark}
 *{box-sizing:border-box}
 body{background:var(--sky-2);color:var(--ink);font:400 1.0625rem/1.6 var(--body);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 96px}
 .wrap{max-width:760px;margin-inline:auto;min-width:0}
