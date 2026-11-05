@@ -1,0 +1,592 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Le Bac à sable</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap">
+<style>
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{margin:0}
+img{max-width:100%}
+[hidden]{display:none!important}
+
+/* Layout : une plage en coupe. Le ciel en haut, le sable en bas, un chemin de seaux qui descend vers la mer. */
+:root{
+  --sky:#BFE7FF; --sky-2:#E4F5FF; --sand:#FFD766; --sand-2:#FFEFB8; --ink:#14235E; --ink-2:#44507F;
+  --coral:#E8384F; --sea:#0B8C8C; --paper:#FFFFFF; --line:#14235E;
+  --cloud:#FFFFFF; --sun:#FFB400; --wave:#37BCC8; --wave2:#0B8C8C; --on-coral:#FFFFFF; --on-sea:#FFFFFF; --crab:#F2495C; --crab-dark:#B42238;
+  --good:#0A7A5A; --bad:#B42238; --good-bg:#D9F6EA; --bad-bg:#FFE3E6;
+  --display:"Bagel Fat One","Arial Rounded MT Bold","Trebuchet MS",sans-serif;
+  --body:"Atkinson Hyperlegible","Trebuchet MS",Verdana,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --sky:#10194A; --sky-2:#18245F; --sand:#D9A93A; --sand-2:#2A2A52; --ink:#F4F2FF; --ink-2:#BFC5EA;
+  --coral:#FF7C8D; --sea:#4FD6CF; --paper:#1D2A69; --line:#8E9BE0;
+  --cloud:#2F3E8F; --sun:#F6E7A6; --wave:#1F7E8F; --wave2:#155B75; --on-coral:#2A0810; --on-sea:#032A2A; --crab:#FF7C8D; --crab-dark:#C93E52;
+  --good:#6FE7BD; --bad:#FF9AA7; --good-bg:#123F3C; --bad-bg:#4A1B33; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --sky:#10194A; --sky-2:#18245F; --sand:#D9A93A; --sand-2:#2A2A52; --ink:#F4F2FF; --ink-2:#BFC5EA;
+  --coral:#FF7C8D; --sea:#4FD6CF; --paper:#1D2A69; --line:#8E9BE0;
+  --cloud:#2F3E8F; --sun:#F6E7A6; --wave:#1F7E8F; --wave2:#155B75; --on-coral:#2A0810; --on-sea:#032A2A; --crab:#FF7C8D; --crab-dark:#C93E52;
+  --good:#6FE7BD; --bad:#FF9AA7; --good-bg:#123F3C; --bad-bg:#4A1B33; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--sky-2);color:var(--ink);font:400 1.0625rem/1.6 var(--body);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 96px}
+.wrap{max-width:760px;margin-inline:auto;min-width:0}
+h1,h2,h3{font-family:var(--display);font-weight:400;line-height:1.08;text-wrap:balance;margin:0}
+h1{font-size:clamp(3.2rem,14vw,5.6rem);letter-spacing:.005em}
+h2{font-size:clamp(1.9rem,6vw,2.8rem)}
+h3{font-size:1.4rem}
+p{margin:0}
+a{color:inherit;text-underline-offset:3px;text-decoration-thickness:2px}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--coral);outline-offset:3px;border-radius:6px}
+.stack{display:flex;flex-direction:column;gap:16px;min-width:0}
+.stack-l{display:flex;flex-direction:column;gap:32px;min-width:0}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--coral);color:var(--on-coral);border:2px solid var(--line);border-radius:999px;padding:12px 22px;font-weight:700;box-shadow:0 4px 0 var(--line);transition:transform .1s,box-shadow .1s;text-align:center}
+.btn:hover{transform:translateY(-1px);box-shadow:0 5px 0 var(--line)}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--line)}
+.btn.alt{background:var(--paper);color:var(--ink)}
+.btn.sea{background:var(--sea);color:var(--on-sea)}
+.btn[disabled]{opacity:.5;cursor:not-allowed}
+
+/* Accueil */
+html,body{overflow-x:clip}
+.hero{background:var(--sky);margin-inline:calc(50% - 50vw);padding-block:40px 0;position:relative;overflow:hidden}
+.hero .wrap{display:flex;flex-direction:column;gap:14px}
+.hero>.wrap,.check>.wrap{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.tag{font-weight:700;font-size:.82rem;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-2)}
+.lede{font-size:1.25rem;max-width:34em;line-height:1.45}
+.beach{display:block;width:100%;height:56px;margin-top:-1px}
+.beach path{fill:var(--sand)}
+.check{background:var(--sand);margin-inline:calc(50% - 50vw);padding-block:6px 40px;color:#14235E}
+.check a{color:#14235E}
+.check-grid{display:grid;grid-template-columns:minmax(0,1fr) 210px;gap:22px;align-items:center}
+.crab-box{height:170px;display:flex;align-items:flex-end;justify-content:center}
+#crab,#crab2{width:190px;max-width:100%;transform-origin:50% 100%;transition:transform .35s cubic-bezier(.3,1.6,.5,1)}
+.crab-body{fill:var(--crab)} .crab-claw{fill:var(--crab);stroke:var(--crab-dark);stroke-width:3}
+.crab-leg{stroke:var(--crab-dark);stroke-width:6;stroke-linecap:round;fill:none}
+.crab-eye{fill:#fff;stroke:#14235E;stroke-width:3}.crab-pupil{fill:#14235E}
+.crab-mouth{stroke:#14235E;stroke-width:4;fill:none;stroke-linecap:round}
+input[type=range]{width:100%;accent-color:var(--coral);height:32px}
+.scale{display:flex;justify-content:space-between;font-size:.88rem;font-weight:700}
+.big-num{font:400 1.5rem/1 var(--display)}
+
+/* Chemin */
+.path{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:14px;position:relative}
+.path::before{content:"";position:absolute;left:37px;top:30px;bottom:30px;border-left:4px dotted var(--line);opacity:.45}
+.stop{position:relative;display:grid;grid-template-columns:78px minmax(0,1fr) auto;gap:14px;align-items:center;width:100%;text-align:left;background:var(--paper);border:2px solid var(--line);border-radius:18px;padding:14px 16px 14px 8px}
+.stop:hover{background:var(--sand-2)}
+.num{width:58px;height:58px;margin-inline:auto;position:relative;display:grid;place-items:center}
+.num svg{position:absolute;inset:0;width:100%;height:100%}
+.num b{position:relative;font:400 1.5rem/1 var(--display);color:#14235E;padding-top:10px}
+.stop h3{font-size:1.35rem}
+.stop small{display:block;color:var(--ink-2);font-size:.95rem;line-height:1.35;margin-top:3px}
+.stop .state{font-size:.8rem;font-weight:700;padding:3px 10px;border-radius:999px;border:2px solid var(--line);white-space:nowrap}
+.stop.done .state{background:var(--sea);color:var(--on-sea)}
+.shells{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.shell{width:34px;height:34px}.shell path{fill:none;stroke:var(--line);stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.shell.on .fill{fill:var(--coral)}
+.shell .fill{fill:transparent}
+
+/* Étape */
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px;padding-block:18px;flex-wrap:wrap}
+.linkbtn{background:none;border:0;padding:6px 0;font-weight:700;text-decoration:underline;text-underline-offset:3px;text-decoration-thickness:2px}
+.step-head{display:flex;flex-direction:column;gap:10px;padding-block:6px 10px}
+.prose{display:flex;flex-direction:column;gap:12px;max-width:62ch}
+.block{display:flex;flex-direction:column;gap:14px;min-width:0}
+.block>.kind{font-weight:700;font-size:.82rem;letter-spacing:.09em;text-transform:uppercase;color:var(--sea)}
+.res{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr))}
+.res a{display:flex;flex-direction:column;gap:3px;padding:14px 16px;background:var(--paper);border:2px solid var(--line);border-radius:14px;text-decoration:none}
+.res a:hover{background:var(--sand-2)}
+.res b{text-decoration:underline;text-underline-offset:3px;text-decoration-thickness:2px}
+.res span{font-size:.92rem;color:var(--ink-2);line-height:1.35}
+.res em{font-style:normal;font-weight:700;font-size:.78rem;letter-spacing:.06em;text-transform:uppercase;color:var(--sea)}
+.game{background:var(--sand-2);border:2px solid var(--line);border-radius:22px;padding:20px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.q{background:var(--paper);border:2px solid var(--line);border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:10px}
+.q .choices{display:flex;flex-wrap:wrap;gap:8px}
+.choice{background:var(--sky-2);border:2px solid var(--line);border-radius:999px;padding:7px 15px;font-weight:700;font-size:.97rem}
+.choice:hover{background:var(--sand)}
+.choice:hover:not([disabled]){color:#14235E}
+.choice.ok{background:var(--good-bg);color:var(--good);border-color:var(--good)}
+.choice.ko{background:var(--bad-bg);color:var(--bad);border-color:var(--bad)}
+.fb{font-size:.97rem;line-height:1.45}
+.score{font:400 1.2rem/1.2 var(--display)}
+.cine{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:10px}
+.cine label{display:grid;grid-template-columns:44px minmax(0,1fr) 22px;gap:10px;align-items:start;background:var(--paper);border:2px solid var(--line);border-radius:14px;padding:12px;cursor:pointer}
+.cine .l{font:400 2rem/1 var(--display);color:var(--coral)}
+.cine input{width:20px;height:20px;accent-color:var(--coral);margin:2px 0 0}
+.cine small{display:block;font-size:.92rem;color:var(--ink-2);line-height:1.35}
+.tips{display:flex;flex-direction:column;gap:8px;margin:0;padding:0;list-style:none}
+.tips li{background:var(--paper);border:2px dashed var(--line);border-radius:12px;padding:10px 14px}
+textarea,input[type=text]{width:100%;font:inherit;color:var(--ink);background:var(--paper);border:2px solid var(--line);border-radius:12px;padding:10px 12px}
+label.f{display:flex;flex-direction:column;gap:5px;font-weight:700}
+.note{font-size:.92rem;color:var(--ink-2);line-height:1.45}
+
+/* Respiration */
+.lung{display:flex;flex-direction:column;align-items:center;gap:14px}
+.bubble-zone{width:min(100%,260px);aspect-ratio:1;max-width:100%;display:grid;place-items:center;background:var(--paper);border:2px solid var(--line);border-radius:50%;overflow:hidden}
+.bubble{grid-area:1/1;width:100%;height:100%;border-radius:50%;background:var(--sea);transform:scale(.38);transition:transform 5s ease-in-out}
+.bubble-txt{grid-area:1/1;font:400 1.6rem/1 var(--display);z-index:1;color:var(--ink);background:var(--paper);padding:8px 14px;border-radius:999px;border:2px solid var(--line)}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:center}
+.row.left{justify-content:flex-start}
+.pill[aria-pressed=true]{background:var(--sand);color:#14235E}
+.senses{display:flex;flex-direction:column;gap:6px}
+.senses p{font-size:1.15rem;font-weight:700}
+
+/* Fin */
+.finish{background:var(--sea);color:var(--on-sea);border:2px solid var(--line);border-radius:22px;padding:22px;display:flex;flex-direction:column;gap:12px}
+.finish .btn{align-self:flex-start;background:var(--sand);color:#14235E}
+.card{background:var(--paper);border:3px solid var(--line);border-radius:18px;padding:18px;display:flex;flex-direction:column;gap:10px;box-shadow:6px 6px 0 var(--coral)}
+.card dl{margin:0;display:flex;flex-direction:column;gap:8px}
+.card dt{font-weight:700;font-size:.82rem;letter-spacing:.07em;text-transform:uppercase;color:var(--sea)}
+.card dd{margin:0;overflow-wrap:anywhere}
+.habits{display:grid;gap:8px;grid-template-columns:repeat(auto-fit,minmax(min(100%,270px),1fr))}
+.habits label{display:flex;gap:10px;align-items:flex-start;background:var(--paper);border:2px solid var(--line);border-radius:12px;padding:10px 12px;cursor:pointer}
+.habits input{width:20px;height:20px;accent-color:var(--coral);flex:none;margin-top:3px}
+
+/* Illustrations */
+.hero .wrap.hero-grid{display:grid;grid-template-columns:minmax(0,1fr) 290px;gap:12px;align-items:end;position:relative;z-index:1}
+.hero-txt{display:flex;flex-direction:column;gap:14px;padding-bottom:24px;min-width:0}
+.hero-scene{width:100%;max-width:100%;display:block;margin-bottom:-30px}
+.scene{display:block;width:100%;height:auto;max-width:100%;border:2px solid var(--line);border-radius:20px}
+.flow{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.flow li{background:var(--paper);border:2px solid var(--line);border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:6px;min-width:0}
+.flow svg{width:44px;height:44px}
+.flow b{font:400 1.1rem/1.1 var(--display)}
+.flow span{font-size:.9rem;line-height:1.35;color:var(--ink-2)}
+.recipe-row{display:grid;grid-template-columns:minmax(0,1fr) 130px;gap:14px;align-items:center}
+#rbucket svg{width:100%;max-width:130px;display:block;margin-inline:auto}
+.piles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.pile{border:2px solid var(--line);border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:8px;min-height:120px;min-width:0}
+.pile.me{background:var(--sand);color:#14235E}
+.pile.sea{background:var(--wave);color:#0B1B45}
+.pile b{font:400 1.08rem/1.15 var(--display)}
+.pile .why{font-size:.9rem;line-height:1.3}
+.chips{display:flex;flex-wrap:wrap;gap:5px}
+.chip{background:#fff;color:#14235E;border:1.5px solid #14235E;border-radius:999px;padding:2px 9px;font-size:.84rem;font-weight:700;animation:drop .35s ease-out}
+.res em svg{width:13px;height:13px;vertical-align:-1px;margin-right:5px;fill:currentColor}
+.sea-end{display:block;width:100%;height:auto;border:2px solid var(--line);border-radius:18px}
+.finish-head{display:flex;align-items:center;gap:12px}
+.finish .shell{width:58px;height:58px;flex:none}
+.finish .shell path{stroke:var(--on-sea)}
+.finish .shell.on .fill{fill:var(--sand)}
+.shell.on{animation:wiggle .6s ease-out}
+.card{position:relative;overflow:hidden}
+.card-crab{position:absolute;right:8px;top:8px;width:74px;height:auto}
+.card h3{padding-right:80px}
+.a-shake{transform-origin:570px 40px;animation:shake 1.4s ease-in-out infinite}
+.a-float{animation:floaty 3.5s ease-in-out infinite}
+.a-wave{animation:wave 7s linear infinite}
+.a-breath{transform-box:fill-box;transform-origin:center;animation:breath 10s ease-in-out infinite}
+.a-sun{transform-box:fill-box;transform-origin:center;animation:spin 40s linear infinite}
+@keyframes shake{0%,60%,100%{transform:rotate(0)}70%{transform:rotate(7deg)}80%{transform:rotate(-7deg)}90%{transform:rotate(4deg)}}
+@keyframes floaty{50%{transform:translateY(-7px)}}
+@keyframes wave{to{transform:translateX(-200px)}}
+@keyframes breath{50%{transform:scale(1.35)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes drop{from{transform:translateY(-10px);opacity:.2}}
+@keyframes wiggle{30%{transform:rotate(-14deg) scale(1.2)}60%{transform:rotate(10deg)}}
+@media (max-width:640px){
+  .hero .wrap.hero-grid{grid-template-columns:minmax(0,1fr)}
+  .hero-txt{padding-bottom:0}
+  .hero-scene{max-width:250px;justify-self:end;margin-top:-10px}
+  .flow{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .recipe-row{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:440px){.piles{grid-template-columns:minmax(0,1fr)}}
+/* Aide */
+.helpbtn{position:fixed;right:calc(14px + env(safe-area-inset-right,0px));bottom:calc(14px + env(safe-area-inset-bottom,0px));z-index:20;background:var(--ink);color:var(--sky-2);border:2px solid var(--line);border-radius:999px;padding:10px 18px;font-weight:700;box-shadow:0 4px 12px rgba(10,20,60,.28)}
+.help{background:var(--paper);border:3px solid var(--coral);border-radius:20px;padding:20px;display:flex;flex-direction:column;gap:12px}
+.help ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+.help strong{font-size:1.1rem}
+.tel{font-weight:700;user-select:all;white-space:nowrap}
+.alertbox{background:#fff;color:#14235E;border:2px solid #14235E;border-radius:12px;padding:12px 14px}
+.alertbox a{color:#14235E}
+.sources{font-size:.92rem;color:var(--ink-2)}
+.sources ul{margin:8px 0 0;padding-left:20px;display:flex;flex-direction:column;gap:4px}
+footer{padding-top:30px;display:flex;flex-direction:column;gap:12px}
+@media (max-width:560px){
+  .check-grid{grid-template-columns:minmax(0,1fr)}
+  .crab-box{height:140px;order:-1}
+  #crab,#crab2{width:160px}
+  .stop{grid-template-columns:60px minmax(0,1fr);padding-left:4px}
+  .stop .state{grid-column:2;justify-self:start}
+  .path::before{left:29px}
+  .num{width:50px;height:50px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+
+<main id="app" class="wrap" aria-live="off"></main>
+<button class="helpbtn" id="helpbtn" type="button">Besoin de parler ?</button>
+
+<script>
+(function(){
+var FORM_URL='https://docs.google.com/forms/d/e/1FAIpQLSe3brlNEwydum-jYyRNYjJYsWlqXitcLaXp8crCEP8Nw_U5ag/viewform';/* Coller ici l'adresse du Google Form : le bloc d'avis apparaîtra automatiquement. */
+var KEY='bac-a-sable-v1';
+var S={before:6,after:null,done:{},game:{},recipe:'',cine:{},thought:'',friend:'',k1:'',k2:'',k3:'',habits:{}};
+try{var saved=JSON.parse(localStorage.getItem(KEY));if(saved)S=Object.assign(S,saved)}catch(e){}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+var app=document.getElementById('app');
+function esc(t){return String(t==null?'':t).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+
+var YT='https://www.youtube.com/watch?v=';
+var SURF='https://stresshumain.ca/programmes/surfe-ton-stress/ados/';
+
+function crabSVG(id,val){
+  var mood=val<=3?'M86 92 q14 12 28 0':val<=6?'M88 96 q12 0 24 0':'M86 100 q14 -12 28 0';
+  var look=val>=8?1:0;
+  return '<svg id="'+id+'" viewBox="0 0 200 130" role="img" aria-label="Corti le crabe, taille '+val+' sur 10" style="transform:scale('+(0.55+val*0.055).toFixed(3)+')">'+
+  '<path class="crab-leg" d="M48 86 L18 100 M46 96 L20 118 M152 86 L182 100 M154 96 L180 118"/>'+
+  '<path class="crab-claw" d="M34 66 C8 62 4 28 24 18 C20 34 30 36 34 26 C50 36 50 60 34 66 Z"/>'+
+  '<path class="crab-claw" d="M166 66 C192 62 196 28 176 18 C180 34 170 36 166 26 C150 36 150 60 166 66 Z"/>'+
+  '<path class="crab-leg" d="M38 66 L56 76 M162 66 L144 76"/>'+
+  '<ellipse class="crab-body" cx="100" cy="86" rx="56" ry="36"/>'+
+  '<path class="crab-leg" d="M84 54 L80 34 M116 54 L120 34"/>'+
+  '<circle class="crab-eye" cx="80" cy="26" r="'+(look?14:12)+'"/><circle class="crab-eye" cx="120" cy="26" r="'+(look?14:12)+'"/>'+
+  '<circle class="crab-pupil" cx="82" cy="27" r="5"/><circle class="crab-pupil" cx="118" cy="27" r="5"/>'+
+  '<path class="crab-mouth" d="'+mood+'"/></svg>';
+}
+function crabLine(v){
+  if(v<=2)return 'Corti fait la sieste. Profite, et viens quand même découvrir les outils.';
+  if(v<=4)return 'Corti trottine. Il te rappelle juste que quelque chose compte pour toi.';
+  if(v<=6)return 'Corti a sorti les pinces. Classique en terminale.';
+  if(v<=8)return 'Corti court partout en crabe. On va lui trouver un autre rythme.';
+  return 'Corti prend toute la plage. Ce parcours peut aider, et parler à quelqu’un aussi.';
+}
+function shell(on){return '<svg class="shell'+(on?' on':'')+'" viewBox="0 0 40 40" aria-hidden="true"><path class="fill" d="M20 34 C8 30 3 20 7 11 C13 5 27 5 33 11 C37 20 32 30 20 34Z"/><path d="M20 34 C8 30 3 20 7 11 C13 5 27 5 33 11 C37 20 32 30 20 34Z M20 34 L20 8 M20 34 L12 10 M20 34 L28 10"/></svg>'}
+function bucket(){return '<svg viewBox="0 0 60 60" aria-hidden="true"><path d="M10 22 L16 54 H44 L50 22 Z" fill="#FFD766" stroke="#14235E" stroke-width="3" stroke-linejoin="round"/><path d="M12 22 C12 4 48 4 48 22" fill="none" stroke="#14235E" stroke-width="3"/></svg>'}
+
+function crabMini(x,y,k){return '<g transform="translate('+x+' '+y+') scale('+k+')"><path class="crab-leg" d="M48 86 L18 100 M46 96 L20 118 M152 86 L182 100 M154 96 L180 118"/><path class="crab-claw" d="M34 66 C8 62 4 28 24 18 C20 34 30 36 34 26 C50 36 50 60 34 66 Z"/><path class="crab-claw" d="M166 66 C192 62 196 28 176 18 C180 34 170 36 166 26 C150 36 150 60 166 66 Z"/><path class="crab-leg" d="M38 66 L56 76 M162 66 L144 76"/><ellipse class="crab-body" cx="100" cy="86" rx="56" ry="36"/><path class="crab-leg" d="M84 54 L80 34 M116 54 L120 34"/><circle class="crab-eye" cx="80" cy="26" r="12"/><circle class="crab-eye" cx="120" cy="26" r="12"/><circle class="crab-pupil" cx="82" cy="27" r="5"/><circle class="crab-pupil" cx="118" cy="27" r="5"/><path class="crab-mouth" d="M86 92 q14 12 28 0"/></g>'}
+var ST='stroke="var(--line)" stroke-width="3"';
+function cloud(x,y,k){return '<g class="a-float" transform="translate('+x+' '+y+') scale('+(k||1)+')"><path d="M10 40 a18 18 0 0 1 8-34 a24 24 0 0 1 44-2 a20 20 0 0 1 26 36 Z" fill="var(--cloud)" '+ST+'/></g>'}
+function sun(x,y,r){var rays='';for(var i=0;i<8;i++){var a=i*Math.PI/4;rays+='<line x1="'+(x+Math.cos(a)*(r+7))+'" y1="'+(y+Math.sin(a)*(r+7))+'" x2="'+(x+Math.cos(a)*(r+17))+'" y2="'+(y+Math.sin(a)*(r+17))+'" stroke="var(--sun)" stroke-width="5" stroke-linecap="round"/>'}return '<g class="a-sun">'+rays+'<rect x="'+(x-r-20)+'" y="'+(y-r-20)+'" width="'+(2*r+40)+'" height="'+(2*r+40)+'" fill="none"/></g><circle cx="'+x+'" cy="'+y+'" r="'+r+'" fill="var(--sun)" '+ST+'/>'}
+function waves(y,h){return '<path class="a-wave" d="M0 '+y+' q50 -22 100 0 t100 0 t100 0 t100 0 t100 0 t100 0 t100 0 t100 0 t100 0 t100 0 t100 0 V'+h+' H0Z" fill="var(--wave)"/>'}
+function heroScene(){return '<svg class="hero-scene" viewBox="0 0 300 250" role="img" aria-label="Une plage avec un château de sable, un parasol et un crabe">'+sun(236,48,27)+cloud(18,28,.9)+
+ '<path d="M80 230 L108 74" stroke="var(--line)" stroke-width="5" stroke-linecap="round"/><path d="M26 98 C40 42 150 28 192 76 C168 66 150 80 135 88 C118 78 96 78 80 92 C64 86 44 88 26 98Z" fill="var(--coral)" '+ST+'/><path d="M82 92 C88 62 98 46 110 42 C118 54 128 72 135 88 C118 78 96 78 82 92Z" fill="var(--cloud)" '+ST+'/>'+
+ '<path d="M150 232 V170 h16 v14 h14 v-14 h16 v14 h14 v-14 h16 v62Z" fill="#FFD766" stroke="#14235E" stroke-width="3" stroke-linejoin="round"/><rect x="178" y="202" width="20" height="30" rx="10" fill="#14235E"/><path d="M188 170 V142 l22 8 -22 8" fill="var(--coral)" stroke="#14235E" stroke-width="3"/>'+crabMini(58,178,.42)+'</svg>'}
+function sc(inner,label,noSand){return '<svg class="scene" viewBox="0 0 760 180" role="img" aria-label="'+label+'"><rect width="760" height="180" fill="var(--sky)"/>'+(noSand?'':'<path d="M0 132 C150 108 300 152 460 130 S680 112 760 132 V180 H0Z" fill="var(--sand)"/>')+inner+'</svg>'}
+var SCENES=[
+ function(){return sc(cloud(40,24)+sun(690,46,24)+crabMini(205,50,.92)+'<g class="a-shake"><path d="M525 112 C525 62 540 42 570 42 C600 42 615 62 615 112 L632 128 H508 Z" fill="var(--sun)" '+ST+'/><circle cx="570" cy="138" r="10" fill="var(--coral)" '+ST+'/><circle cx="570" cy="34" r="8" fill="var(--sun)" '+ST+'/></g><path d="M480 56 q-14 22 0 44 M652 56 q14 22 0 44 M456 42 q-22 36 0 72 M676 42 q22 36 0 72" fill="none" stroke="var(--coral)" stroke-width="5" stroke-linecap="round"/>','Corti le crabe devant une cloche d’alarme qui sonne')},
+ function(){return sc(sun(60,44,22)+cloud(640,18,.8)+crabMini(120,50,.92)+'<g font-family="Bagel Fat One,Arial Rounded MT Bold,sans-serif" font-size="34" fill="var(--coral)"><text x="402" y="44" class="a-float">C</text><text x="448" y="32" fill="var(--wave2)">I</text><text x="486" y="50" class="a-float">N</text><text x="532" y="36" fill="var(--wave2)">É</text></g><path d="M384 76 L410 170 H522 L548 76 Z" fill="var(--sun)" '+ST+'/><path d="M388 76 C388 18 544 18 544 76" fill="none" '+ST+' opacity=".35"/><ellipse cx="466" cy="76" rx="82" ry="11" fill="var(--paper)" '+ST+'/>','Les lettres C, I, N et É tombent dans le seau de Corti')},
+ function(){return sc(sun(640,50,30)+cloud(70,22)+'<circle class="a-breath" cx="380" cy="72" r="34" fill="var(--wave)" '+ST+'/><path d="M0 146 C190 124 300 160 470 140 S680 128 760 146 V180 H0Z" fill="var(--sand)"/>'+crabMini(120,62,.84)+waves(162,180),'Corti se repose sur le sable pendant qu’une bulle gonfle et dégonfle',true)},
+ function(){var b=function(x,y,t,w){return '<g class="a-float"><ellipse cx="'+x+'" cy="'+y+'" rx="'+w+'" ry="24" fill="var(--cloud)" '+ST+'/><text x="'+x+'" y="'+(y+6)+'" text-anchor="middle" font-size="17" font-weight="700" fill="var(--ink)">'+t+'</text></g>'};return sc(sun(60,42,20)+crabMini(100,48,.9)+'<path d="M266 70 L410 62" stroke="var(--line)" stroke-width="6" stroke-linecap="round"/><ellipse cx="462" cy="72" rx="56" ry="46" fill="none" stroke="var(--line)" stroke-width="4"/><path d="M420 42 L505 102 M430 104 L504 44 M406 72 H518 M462 26 V118" stroke="var(--line)" stroke-width="1.5" opacity=".65"/>'+b(462,72,'jamais',38)+b(590,50,'toujours',48)+b(676,108,'nul',30),'Corti attrape des pensées exagérées avec une épuisette')},
+ function(){return sc(sun(684,46,24)+cloud(40,20,.8)+crabMini(130,50,.92)+'<circle cx="390" cy="60" r="20" fill="var(--wave)" '+ST+'/><rect x="432" y="28" width="42" height="56" rx="6" fill="var(--paper)" '+ST+' transform="rotate(10 452 56)"/><path d="M500 86 C492 54 546 54 538 86" fill="var(--coral)" '+ST+'/><path d="M396 80 C396 28 544 28 544 80" fill="none" stroke="var(--line)" stroke-width="5"/><path d="M360 80 H572 L552 168 H380Z" fill="var(--coral)" '+ST+'/><path d="M430 124 q36 24 72 0" fill="none" stroke="var(--paper)" stroke-width="5" stroke-linecap="round"/>','Le sac de plage de Corti avec ses outils anti-stress')}
+];
+function flowIcon(k){var m={bell:'<path d="M12 32 C12 14 18 8 24 8 C30 8 36 14 36 32 L40 37 H8Z" fill="var(--sun)" stroke="var(--line)" stroke-width="2.5"/>',heart:'<path d="M24 41 C6 28 5 13 15 11 C20 10 23 14 24 17 C25 14 28 10 33 11 C43 13 42 28 24 41Z" fill="var(--coral)" stroke="var(--line)" stroke-width="2.5"/>',bat:'<rect x="7" y="15" width="30" height="20" rx="4" fill="var(--paper)" stroke="var(--line)" stroke-width="2.5"/><rect x="11" y="19" width="16" height="12" fill="var(--wave2)"/><rect x="38" y="21" width="4" height="8" fill="var(--line)"/>',wave:'<path d="M4 20 q10 -12 20 0 t20 0 M4 32 q10 -12 20 0 t20 0" fill="none" stroke="var(--wave2)" stroke-width="4" stroke-linecap="round"/>'};return '<svg viewBox="0 0 48 48" aria-hidden="true">'+m[k]+'</svg>'}
+var FLOW='<ol class="flow" aria-label="Les quatre temps du stress aigu"><li>'+flowIcon('bell')+'<b>1. L’alerte</b><span>L’amygdale repère quelque chose d’important.</span></li><li>'+flowIcon('heart')+'<b>2. Le turbo</b><span>L’adrénaline accélère le cœur et le souffle.</span></li><li>'+flowIcon('bat')+'<b>3. L’énergie</b><span>Le cortisol rend plus de sucre disponible.</span></li><li>'+flowIcon('wave')+'<b>4. Le retour</b><span>Le cortisol freine sa propre production.</span></li></ol>';
+function seaEnd(n){var sh='';for(var i=0;i<5;i++){sh+='<circle cx="'+(250+i*65)+'" cy="58" r="17" fill="'+(i<n?'var(--coral)':'var(--paper)')+'" '+ST+'/>'}return '<svg class="sea-end" viewBox="0 0 760 120" role="img" aria-label="La mer, '+n+' coquillages sur 5 récupérés"><rect width="760" height="120" fill="var(--sky)"/>'+waves(90,120)+sh+crabMini(40,12,.62)+'<text x="665" y="65" font-size="22" font-weight="700" fill="var(--ink)">'+n+' / 5</text></svg>'}
+function recipeBucket(){var n=CINE.filter(function(c){return S.cine[c.k]}).length,top=118-n*20;return '<svg viewBox="0 0 130 130" role="img" aria-label="Seau rempli à '+n+' ingrédients sur 4"><clipPath id="rb"><path d="M24 34 L36 120 H94 L106 34Z"/></clipPath><rect x="0" y="'+top+'" width="130" height="130" fill="var(--sun)" clip-path="url(#rb)"/><path d="M24 34 L36 120 H94 L106 34Z" fill="none" '+ST+'/><path d="M24 34 C24 2 106 2 106 34" fill="none" '+ST+'/><text x="65" y="98" text-anchor="middle" font-size="26" font-family="Bagel Fat One,sans-serif" fill="var(--ink)">'+n+'/4</text></svg>'}
+function pilesHTML(){var g=S.game.q2||{};function chips(a){return Q2.filter(function(q,i){return g[i]!=null&&q.a===a}).map(function(q){return '<span class="chip">'+q.s+'</span>'}).join('')}
+ return '<div class="pile me"><b>Ça dépend de moi</b><span class="why">J’agis, même un peu.</span><div class="chips">'+chips(0)+'</div></div><div class="pile sea"><b>Ça ne dépend pas de moi</b><span class="why">Je laisse filer et je reviens à la première pile.</span><div class="chips">'+chips(1)+'</div></div>'}
+
+var STEPS=[
+ {id:'etape-1',t:'Ton alarme interne',sub:'À quoi sert le stress, et ce qui se passe dans ton corps.',min:'12 min'},
+ {id:'etape-2',t:'Ta recette du stress',sub:'Les quatre ingrédients qui font monter la pression.',min:'15 min'},
+ {id:'etape-3',t:'Le corps d’abord',sub:'Deux gestes qui passent inaperçus, même en salle d’examen.',min:'10 min'},
+ {id:'etape-4',t:'La chasse aux pensées',sub:'Repérer les phrases qui exagèrent et leur répondre.',min:'12 min'},
+ {id:'etape-5',t:'Ton kit de plage',sub:'Tu gardes ce qui marche pour toi et tu laisses le reste.',min:'10 min'}
+];
+
+function doneCount(){return STEPS.filter(function(s){return S.done[s.id]}).length}
+
+function home(){
+  var n=doneCount(),next=STEPS.filter(function(s){return !S.done[s.id]})[0];
+  app.innerHTML='<section class="hero"><div class="wrap hero-grid"><div class="hero-txt">'+
+    '<p class="tag">Parcours en autonomie</p>'+
+    '<h1>Le Bac<br>à sable</h1>'+
+    '<p class="lede">Ici, tu peux te tromper, recommencer et jouer. Personne ne note. En une heure environ, en cinq étapes, tu vas comprendre ton stress et trouver ce qui le calme.</p></div>'+heroScene()+
+    '</div><svg class="beach" viewBox="0 0 800 56" preserveAspectRatio="none" aria-hidden="true"><path d="M0 34 C120 4 240 8 360 28 S620 56 800 16 V56 H0Z"/></svg></section>'+
+    '<section class="check"><div class="wrap check-grid">'+
+      '<div class="stack"><h2>Quelle taille fait ton crabe aujourd’hui ?</h2>'+
+      '<p>Voici Corti, ton stress en version crustacé. Son nom vient du cortisol. Il n’est pas ton ennemi, il a juste tendance à pincer quand il panique.</p>'+
+      '<label for="s-before"><span class="big-num" id="v-before">'+S.before+' / 10</span></label>'+
+      '<input type="range" id="s-before" min="0" max="10" value="'+S.before+'">'+
+      '<div class="scale"><span>Tout petit</span><span>Géant</span></div>'+
+      '<p id="line-before" aria-live="polite">'+crabLine(S.before)+'</p>'+
+      '<p id="alert-before" class="alertbox" '+(S.before>=9?'':'hidden')+'>Si c’est trop lourd en ce moment, tu n’as pas à gérer ça seul ou seule. <button type="button" class="linkbtn" data-help>Voir à qui parler</button></p>'+
+      '</div><div class="crab-box" id="box-before">'+crabSVG('crab',S.before)+'</div></div></section>'+
+    '<div class="stack-l" style="padding-top:32px">'+
+      '<section class="stack"><div class="row left" style="justify-content:space-between"><h2>Le chemin vers la mer</h2>'+
+      '<div class="shells" aria-label="'+n+' coquillages sur 5">'+STEPS.map(function(s){return shell(S.done[s.id])}).join('')+'</div></div>'+
+      '<p>Une étape par jour suffit. Chaque étape finie te donne un coquillage.</p>'+
+      '<ol class="path">'+STEPS.map(function(s,i){return '<li><button type="button" class="stop'+(S.done[s.id]?' done':'')+'" data-go="'+s.id+'"><span class="num">'+bucket()+'<b>'+(i+1)+'</b></span><span><h3>'+s.t+'</h3><small>'+s.sub+'</small></span><span class="state">'+(S.done[s.id]?'Fait':s.min)+'</span></button></li>'}).join('')+'</ol>'+seaEnd(n)+
+      (next?'<div><button type="button" class="btn" data-go="'+next.id+'">'+(n?'Continuer : ':'Commencer : ')+next.t+'</button></div>':'<div><button type="button" class="btn sea" data-go="etape-5">Revoir mon kit</button></div>')+
+      '</section>'+
+      (n===5?avis():'')+
+      helpBlock()+
+      footer()+
+    '</div>';
+  var r=document.getElementById('s-before');
+  r.addEventListener('input',function(){
+    S.before=+r.value;save();
+    document.getElementById('v-before').textContent=S.before+' / 10';
+    document.getElementById('line-before').textContent=crabLine(S.before);
+    document.getElementById('box-before').innerHTML=crabSVG('crab',S.before);
+    document.getElementById('alert-before').hidden=S.before<9;
+  });
+}
+
+function helpBlock(){
+  return '<section class="help" id="aide"><h2>Si c’est trop lourd</h2>'+
+  '<p>Ce parcours aide pour le stress du quotidien. Il ne remplace personne. Parles-en à un adulte ou à un professionnel si le stress dure, si tu ne dors plus, si tu ne manges plus, si tu te sens très seul ou seule, épuisé ou épuisée, ou si tu as des idées noires.</p><ul>'+
+  '<li><strong>Au lycée</strong><br>L’infirmier ou l’infirmière, le ou la psychologue de l’Éducation nationale, le CPE, un prof en qui tu as confiance.</li>'+
+  '<li><strong>Fil Santé Jeunes</strong> (12-25 ans)<br><span class="tel">0 800 235 236</span>, gratuit et anonyme, tous les jours de 9 h à 23 h. Tchat sur <a href="https://www.filsantejeunes.com" target="_blank" rel="noopener">filsantejeunes.com</a>.</li>'+
+  '<li><strong>Idées suicidaires, ou inquiétude pour quelqu’un</strong><br><span class="tel">3114</span>, gratuit, 24 h/24 et 7 j/7.</li>'+
+  '<li><strong>Danger immédiat</strong><br><span class="tel">15</span> ou <span class="tel">112</span>.</li>'+
+  '</ul><p class="note">Pour consulter sans frais : <a href="https://www.sante.fr/prendre-soin-de-la-sante-mentale-des-18-25-ans" target="_blank" rel="noopener">le dispositif Mon Soutien Psy</a> prend en charge jusqu’à 12 séances par an, selon la situation.</p></section>';
+}
+function avis(){
+  if(!FORM_URL)return '';
+  return '<section class="game"><h2>Ton avis fait évoluer le parcours</h2><p>Trois minutes, sans nom ni adresse e-mail. Dis-nous ce qui t’a aidé et ce qu’il faut changer.</p><p class="note">Le questionnaire n’est pas lu en direct. Si tu as besoin de parler à quelqu’un, utilise le bouton « Besoin de parler ? ».</p><div><a class="btn sea" style="text-decoration:none" href="'+FORM_URL+'" target="_blank" rel="noopener">Donner mon avis</a></div></section>';
+}
+function footer(){
+  return '<footer class="sources"><details><summary><b>D’où viennent les contenus</b></summary><ul>'+
+  '<li><a href="https://stresshumain.ca/programmes/surfe-ton-stress/" target="_blank" rel="noopener">Surfe ton stress</a>, Centre d’études sur le stress humain</li>'+
+  '<li><a href="https://www.noovomoi.ca/vivre/bien-etre/article.comprendre-stress-caracteristiques-cine.1.8717164.html" target="_blank" rel="noopener">Les caractéristiques C.I.N.É., d’après Sonia Lupien</a></li>'+
+  '<li><a href="https://aufutur.fr/revisions/svt/mecanismes-stress/" target="_blank" rel="noopener">AuFutur, les mécanismes du stress</a></li>'+
+  '<li><a href="https://www.santementale-info-service.fr/en-prendre-soin/tous-les-exercices/coherence-cardiaque" target="_blank" rel="noopener">Santé mentale info service, cohérence cardiaque</a></li>'+
+  '<li><a href="https://www.larevuedupraticien.fr/exercice/coherence-cardiaque-quels-benefices-prouves" target="_blank" rel="noopener">La Revue du praticien, bénéfices et limites de la cohérence cardiaque</a></li>'+
+  '<li><a href="https://www.nightline.fr/kit-de-vie/comprendre-mes-biais-de-pensee" target="_blank" rel="noopener">Nightline, biais de pensée</a></li>'+
+  '<li><a href="https://www.santepubliquefrance.fr/presse/2023/sante-mentale-des-jeunes-des-conseils-pour-prendre-soin-de-sa-sante-mentale" target="_blank" rel="noopener">Santé publique France, Le Fil Good</a></li>'+
+  '</ul></details><p>Prototype pédagogique. Il ne pose pas de diagnostic. Ce que tu écris reste dans ce navigateur, quand celui-ci le permet, et personne d’autre ne le voit. Sur un ordinateur partagé, évite d’y noter des choses privées.</p></footer>';
+}
+
+function res(kind,href,title,desc){var ic=/^Vid/.test(kind)?'<path d="M3 1 L14 8 L3 15Z"/>':/^(Lecture)/.test(kind)?'<path d="M1 2 H7 V14 H1Z M9 2 H15 V14 H9Z"/>':'<path d="M8 1 L10 6 L15 6 L11 9.5 L12.5 15 L8 12 L3.5 15 L5 9.5 L1 6 L6 6Z"/>';return '<a href="'+href+'" target="_blank" rel="noopener"><em><svg viewBox="0 0 16 16" aria-hidden="true">'+ic+'</svg>'+kind+'</em><b>'+title+'</b><span>'+desc+'</span></a>'}
+function shellHead(i){
+  var s=STEPS[i];
+  return '<div class="top"><button type="button" class="linkbtn" data-go="">Retour au chemin</button><div class="shells" aria-label="'+doneCount()+' coquillages sur 5">'+STEPS.map(function(x){return shell(S.done[x.id])}).join('')+'</div></div>'+
+  '<header class="step-head"><p class="tag">Étape '+(i+1)+' sur 5 · '+s.min+'</p><h1 style="font-size:clamp(2.5rem,10vw,4.4rem)">'+s.t+'</h1></header>'+SCENES[i]()+'<div style="height:24px"></div>';
+}
+function finish(i){
+  var s=STEPS[i],nxt=STEPS[i+1];
+  return '<section class="finish"><div class="finish-head">'+shell(S.done[s.id])+'<h2>'+(S.done[s.id]?'Coquillage récupéré':'Ton coquillage t’attend')+'</h2></div><p>'+(nxt?'La suite : '+nxt.t+'. Tu peux aussi faire une pause et revenir demain.':'Le parcours est bouclé. Tu peux revenir ici quand tu veux.')+'</p><button type="button" class="btn" data-finish="'+i+'">'+(nxt?'Prendre le coquillage et continuer':'Prendre le dernier coquillage')+'</button></section>';
+}
+
+/* Moteur de quiz */
+function quizHTML(id,items){
+  return items.map(function(q,i){
+    var st=(S.game[id]||{})[i];
+    return '<div class="q" data-q="'+i+'"><p><b>'+q.q+'</b></p><div class="choices">'+q.c.map(function(c,j){
+      var cls='';if(st!=null){if(j===q.a)cls=' ok';else if(j===st)cls=' ko'}
+      return '<button type="button" class="choice'+cls+'" data-quiz="'+id+'" data-i="'+i+'" data-j="'+j+'"'+(st!=null?' disabled':'')+'>'+c+'</button>'}).join('')+
+      '</div><p class="fb" aria-live="polite">'+(st!=null?(st===q.a?'<b>Bien vu.</b> ':'<b>Pas tout à fait.</b> ')+q.e:'')+'</p></div>'}).join('')+
+    '<p class="score" id="score-'+id+'">'+scoreText(id,items)+'</p><div><button type="button" class="linkbtn" data-reset="'+id+'">Rejouer</button></div>';
+}
+function scoreText(id,items){
+  var g=S.game[id]||{},answered=Object.keys(g).length,good=items.filter(function(q,i){return g[i]===q.a}).length;
+  if(!answered)return 'Clique sur tes réponses. Aucune note ne sort d’ici.';
+  if(answered<items.length)return good+' bonne'+(good>1?'s':'')+' réponse'+(good>1?'s':'')+' pour l’instant.';
+  return good+' sur '+items.length+'. Corti est impressionné.';
+}
+
+var Q1=[
+ {q:'Avoir le cœur qui bat fort avant une épreuve veut dire que je ne suis pas prêt ou prête.',c:['Vrai','Faux'],a:1,e:'Ton corps réagit à une situation qui compte. Le cœur accélère même chez les gens très bien préparés.'},
+ {q:'Le stress aigu prépare le corps à réagir.',c:['Vrai','Faux'],a:0,e:'L’adrénaline accélère le cœur et la respiration, et le sucre disponible dans le sang augmente. Ton corps se met en mode action.'},
+ {q:'Une fois lancé, le cortisol monte sans jamais s’arrêter.',c:['Vrai','Faux'],a:1,e:'Le cortisol freine lui-même sa production : c’est le rétrocontrôle négatif. Ton corps sait revenir à l’équilibre.'},
+ {q:'Un stress qui dure très longtemps peut devenir mauvais pour la santé.',c:['Vrai','Faux'],a:0,e:'C’est toute la différence entre une alarme qui sonne un moment et une alarme qui ne s’éteint plus. Dans ce cas, on en parle à quelqu’un.'}
+];
+var Q2=[
+ {s:'Réviser 20 minutes',q:'Réviser un chapitre pendant 20 minutes aujourd’hui',a:0,e:'C’est petit, précis et faisable dès aujourd’hui.'},
+ {s:'Le sujet du bac',q:'Le sujet qui tombera le jour du bac',a:1,e:'Tu ne le choisis pas. Tu peux en revanche t’entraîner sur des sujets variés.'},
+ {s:'Mes alertes Parcoursup',q:'Mettre des alertes pour les dates Parcoursup',a:0,e:'Deux minutes, et une inquiétude en moins.'},
+ {s:'La réponse d’une formation',q:'La réponse d’une formation sur Parcoursup',a:1,e:'La décision lui appartient. De ton côté, tu peux soigner ton dossier et prévoir d’autres vœux.'},
+ {s:'Demander de l’aide',q:'Demander à un prof de réexpliquer un point',a:0,e:'Il suffit d’une question à la fin du cours.'},
+ {s:'L’avis de ma tante',q:'Ce que ta tante pense de tes vœux',a:1,e:'Elle garde son avis. Tu choisis ce que tu en fais et le temps que tu y passes.'}
+].map(function(o){o.c=['Ça dépend de moi','Ça ne dépend pas de moi'];return o});
+var Q4=[
+ {q:'« Si je rate ce DS, ma vie est fichue. »',a:0,e:'Le catastrophisme saute directement au pire scénario. Un DS reste une note parmi beaucoup d’autres.'},
+ {q:'« Le prof m’a regardé bizarrement, il me trouve nul. »',a:1,e:'La lecture de pensée invente ce que l’autre se dit. Il avait peut-être juste mal dormi.'},
+ {q:'« Soit j’ai 18, soit je suis une catastrophe. »',a:2,e:'Le tout ou rien efface tout ce qui existe entre les deux, et c’est là que vivent la plupart des notes.'},
+ {q:'« J’ai raté un exercice de maths, je rate toujours tout. »',a:3,e:'La surgénéralisation transforme un cas en règle. Cherche une seule exception et la règle tombe.'}
+].map(function(o){o.c=['Catastrophisme','Lecture de pensée','Tout ou rien','Surgénéralisation'];return o});
+var QUIZ={q1:Q1,q2:Q2,q4:Q4};
+
+var CINE=[
+ {k:'C',t:'Contrôle faible',d:'Tu as peu de prise sur ce qui se passe. Exemple : attendre une réponse.',tip:'Fais deux colonnes : ce que je peux faire, ce qui ne dépend pas de moi. Choisis une seule action dans la première.'},
+ {k:'I',t:'Imprévisibilité',d:'Tu ne sais pas ce qui va arriver. Exemple : une interro surprise.',tip:'Prépare un plan B en une phrase : « Si ça se passe comme ça, je ferai ceci. »'},
+ {k:'N',t:'Nouveauté',d:'Tu n’as jamais vécu ça. Exemple : ton premier oral.',tip:'Rends la situation familière : entraîne-toi à voix haute, regarde la salle à l’avance, chronomètre-toi.'},
+ {k:'É',t:'Égo menacé',d:'Tu as peur d’être jugé ou jugée. Exemple : passer devant la classe.',tip:'Note trois choses que tu as déjà réussies cette année. Une note évalue une copie, pas ta valeur.'}
+];
+
+var VIEWS={
+ 'etape-1':function(){return shellHead(0)+'<div class="stack-l">'+
+  '<section class="prose"><p>Ton cerveau détecte quelque chose d’important. L’amygdale, une petite zone impliquée dans les émotions, sonne l’alarme. L’adrénaline accélère alors ton cœur et ta respiration, et le cortisol prend le relais pour fournir de l’énergie.</p><p>Ce système a été très utile pour échapper aux prédateurs. Il s’active aussi devant une copie de philo, car il ne fait pas bien la différence. Tes mains moites ne disent rien de ton niveau. Elles disent que ton corps se prépare.</p><p>Si tu suis la spécialité SVT, bonne nouvelle : ça fait partie du programme, donc tu révises en plus.</p></section>'+FLOW+
+  '<section class="block"><p class="kind">Regarder et lire</p><div class="res">'+
+    res('Vidéo · 5 min',YT+'eXg5YZ1Vhh4','Surfe ton stress, capsule 1 sur 4','Série québécoise du Centre d’études sur le stress humain, conçue pour les ados.')+
+    res('Lecture · 5 min','https://aufutur.fr/revisions/svt/mecanismes-stress/','Le stress, version SVT','Un article de révision d’AuFutur sur l’adrénaline, le cortisol et le retour à l’équilibre.')+
+  '</div></section>'+
+  '<section class="game"><h2>Vrai ou faux, pince en l’air</h2>'+quizHTML('q1',Q1)+'</section>'+finish(0)+'</div>'},
+ 'etape-2':function(){
+  return shellHead(1)+'<div class="stack-l">'+
+  '<section class="prose"><p>La chercheuse Sonia Lupien résume ce qui rend une situation stressante avec quatre lettres : C.I.N.É. Plus une situation en coche, plus le stress grimpe. La terminale est très forte à ce jeu. Parcoursup peut cocher les quatre à lui tout seul.</p></section>'+
+  '<section class="block"><p class="kind">Regarder et lire</p><div class="res">'+
+    res('Vidéo · 5 min',YT+'bhFjJv1XRRY','Surfe ton stress, capsule 2 sur 4','La suite de la série. Le journal de bord est disponible sur la page du programme.')+
+    res('Lecture · 4 min','https://www.letudiant.fr/etudes/parcoursup/parcoursup-comment-gerer-son-stress-pendant-la-procedure.html','Parcoursup sans y laisser ses nerfs','Conseils de pros et témoignages d’anciens candidats dans L’Etudiant.')+
+  '</div></section>'+
+  '<section class="game"><h2>Cuisine ta recette</h2><label class="f" for="recipe">Une situation qui te stresse en ce moment<input type="text" id="recipe" maxlength="140" placeholder="Exemple : le bac blanc de maths" value="'+esc(S.recipe)+'"></label>'+
+  '<div class="recipe-row"><p><b>Quels ingrédients y trouves-tu ?</b> Chaque case cochée remplit ton seau.</p><div id="rbucket">'+recipeBucket()+'</div></div><div class="cine">'+CINE.map(function(c){return '<label for="c-'+c.k+'"><span class="l">'+c.k+'</span><span><b>'+c.t+'</b><small>'+c.d+'</small></span><input type="checkbox" id="c-'+c.k+'" data-cine="'+c.k+'"'+(S.cine[c.k]?' checked':'')+'></label>'}).join('')+'</div>'+
+  '<div id="tips" aria-live="polite">'+tipsHTML()+'</div></section>'+
+  '<section class="game"><h2>Ça dépend de moi ?</h2><p>On s’épuise souvent à ruminer sur ce qu’on ne peut pas changer. Ce tri t’aide à voir où ton énergie est utile : tu agis sur ce qui dépend de toi, et tu arrêtes de tourner en boucle sur le reste.</p><p><b>Pour chaque situation, choisis la bonne pile.</b></p>'+quizHTML('q2',Q2)+'<div class="piles" id="piles">'+pilesHTML()+'</div><label class="f" for="act">À toi : une action qui dépend de toi et qui prend moins de 10 minutes<input type="text" id="act" maxlength="120" placeholder="Exemple : noter les dates de mes vœux" value="'+esc(S.act)+'"></label></section>'+finish(1)+'</div>'},
+ 'etape-3':function(){return shellHead(2)+'<div class="stack-l">'+
+  '<section class="prose"><p>Quand le stress monte, raisonner devient difficile. Tu peux passer par le corps, surtout par ton souffle, que tu peux ralentir volontairement. Essaie maintenant, sans attendre d’être stressé ou stressée : un geste s’apprend mieux au calme.</p></section>'+
+  '<section class="game"><h2>La bulle</h2><p>Inspire quand la bulle gonfle pendant 5 secondes, expire quand elle dégonfle pendant 5 secondes. C’est le rythme de la cohérence cardiaque. Si la tête te tourne, arrête et respire normalement.</p>'+
+  '<div class="lung"><div class="bubble-zone"><div class="bubble" id="bubble"></div><div class="bubble-txt" id="btxt" aria-live="polite">Prêt ?</div></div>'+
+  '<div class="row" role="group" aria-label="Durée"><button type="button" class="choice pill" data-dur="1" aria-pressed="true">1 min</button><button type="button" class="choice pill" data-dur="3" aria-pressed="false">3 min</button><button type="button" class="choice pill" data-dur="5" aria-pressed="false">5 min</button></div>'+
+  '<button type="button" class="btn sea" id="bstart">Lancer la bulle</button></div>'+
+  '<p class="note">Ce qu’on sait : ça suggère un effet sur le stress et l’anxiété, mais les études restent limitées. Le risque est faible et l’essai ne coûte rien. Garde ce geste s’il t’aide.</p></section>'+
+  '<section class="game"><h2>Le 5-4-3-2-1 de la salle d’examen</h2><p>Quand ta tête s’emballe, ramène-la dans la pièce. Personne ne verra rien.</p><div class="senses"><p id="sense" aria-live="polite">Clique pour commencer.</p></div><div><button type="button" class="btn alt" id="snext">Commencer</button></div></section>'+
+  '<section class="block"><p class="kind">Pour pratiquer guidé</p><div class="res">'+
+    res('Vidéo · 6 min','https://www.santementale-info-service.fr/en-prendre-soin/tous-les-exercices/coherence-cardiaque','Cohérence cardiaque guidée','La vidéo de Santé publique France, avec transcription.')+
+    res('Vidéos · 3 à 7 min','https://www.chuv.ch/fr/psychiatrie/dp-home/recherche/centres-et-unites-de-recherche/unite-de-recherche-du-service-universitaire-de-psychiatrie-de-lenfant-et-de-ladolescent-supea/coherence-cardiaque','Le bouton d’urgence','L’exercice court du CHUV de Lausanne, avec témoignages de jeunes.')+
+    res('Exercice','https://www.santementale-info-service.fr/en-prendre-soin/tous-les-exercices/relaxation-musculaire','Relaxation musculaire','Pour relâcher la mâchoire, les épaules et tout ce qui se crispe.')+
+    res('Vidéo · 5 min',YT+'CfJBDS2uXCc','Surfe ton stress, capsule 3 sur 4','La suite de la série, à regarder dans l’ordre.')+
+  '</div></section>'+finish(2)+'</div>'},
+ 'etape-4':function(){return shellHead(3)+'<div class="stack-l">'+
+  '<section class="prose"><p>Une pensée stressante a souvent l’air d’un fait. Pourtant, c’est une phrase, et elle exagère parfois. Les psychologues parlent de distorsions cognitives. Tout le monde en fait. Les repérer te donne un peu de recul.</p></section>'+
+  '<section class="game"><h2>Attrape la pensée piège</h2>'+quizHTML('q4',Q4)+'</section>'+
+  '<section class="game"><h2>Le conseil à ton meilleur ami</h2><p>On est souvent plus juste avec les autres qu’avec soi-même. Profitons-en.</p>'+
+  '<label class="f" for="thought">La phrase que ta tête te répète<textarea id="thought" rows="2" maxlength="240" placeholder="Exemple : je n’y arriverai jamais">'+esc(S.thought)+'</textarea></label>'+
+  '<label class="f" for="friend">Que répondrais-tu à un ami qui te dirait ça ?<textarea id="friend" rows="3" maxlength="320" placeholder="Exemple : tu as déjà remonté une note cette année, et il te reste du temps">'+esc(S.friend)+'</textarea></label>'+
+  '<p class="note">Une réponse utile reste vraie. Pas besoin de te dire que tout ira parfaitement.</p></section>'+
+  '<section class="block"><p class="kind">Lire pour aller plus loin</p><div class="res">'+
+    res('Lecture · 8 min','https://www.nightline.fr/kit-de-vie/comprendre-mes-biais-de-pensee','Les dix biais de pensée','Le kit de vie de Nightline, avec le tout ou rien, le catastrophisme et les autres.')+
+    res('Lecture · 8 min','https://www.nightline.fr/kit-de-vie/identifier-ses-emotions','Identifier ses émotions','Comment chaque émotion se manifeste dans le corps et à quoi elle sert.')+
+  '</div></section>'+finish(3)+'</div>'},
+ 'etape-5':function(){
+  var opts=[['bouge','Bouger un peu chaque jour','Une marche de 15 minutes compte.'],['dors','Garder un rythme de sommeil stable','Se coucher à peu près à la même heure, même sans dormir tout de suite.'],['passion','Garder un créneau pour une passion','Il est dans ton agenda, comme un cours.'],['aide','Rendre service à quelqu’un','Expliquer un exercice marche très bien.'],['merci','Noter une chose agréable le soir','Une ligne, même minuscule.']];
+  return shellHead(4)+'<div class="stack-l">'+
+  '<section class="prose"><p>Tu as testé plusieurs outils. Tous ne te conviendront pas, et c’est normal. Garde les deux ou trois qui t’aident et prévois de les utiliser. Dans ta poche, ils serviront le jour où Corti prendra de la place.</p></section>'+
+  '<section class="block"><p class="kind">Dernière vidéo et dernière lecture</p><div class="res">'+
+    res('Vidéo · 5 min',YT+'ucC8HuOcDmE','Surfe ton stress, capsule 4 sur 4','La fin de la série. Le programme propose aussi un journal de bord.')+
+    res('Boîte à outils','https://www.sante.fr/saider-soi-meme-des-outils-pour-tous','S’aider soi-même','Des outils gratuits et sans publicité, sélectionnés par Psycom.')+
+    res('Programme complet',SURF,'Surfe ton stress','Pour revoir les capsules et télécharger le journal de bord.')+
+  '</div></section>'+
+  '<section class="game"><h2>Choisis tes habitudes</h2><p>Les cinq conseils du Fil Good de Santé publique France. Deux suffisent largement.</p><div class="habits">'+opts.map(function(o){return '<label for="h-'+o[0]+'"><input type="checkbox" id="h-'+o[0]+'" data-habit="'+esc(o[1])+'"'+(S.habits[o[1]]?' checked':'')+'><span><b>'+o[1]+'</b><br><span class="note">'+o[2]+'</span></span></label>'}).join('')+'</div>'+
+  '<label class="f" for="k1">Quand ça monte d’un coup, je fais<input type="text" id="k1" maxlength="120" placeholder="Exemple : une minute de bulle" value="'+esc(S.k1)+'"></label>'+
+  '<label class="f" for="k2">La phrase que je me redis<input type="text" id="k2" maxlength="140" placeholder="Exemple : une note évalue une copie, pas moi" value="'+esc(S.k2||S.friend)+'"></label>'+
+  '<label class="f" for="k3">Si c’est trop lourd, j’en parle à<input type="text" id="k3" maxlength="80" placeholder="Un prénom ou un rôle" value="'+esc(S.k3)+'"></label></section>'+
+  '<section class="stack"><h2>Ta carte de plage</h2><div class="card" id="card"></div><div class="row left"><button type="button" class="btn alt" id="copy">Copier ma carte</button><span id="copied" class="note" aria-live="polite"></span></div></section>'+
+  '<section class="game"><h2>Et ton crabe, maintenant ?</h2><div class="crab-box" id="box-after">'+crabSVG('crab2',S.after==null?S.before:S.after)+'</div><label for="s-after"><span class="big-num" id="v-after">'+(S.after==null?S.before:S.after)+' / 10</span></label><input type="range" id="s-after" min="0" max="10" value="'+(S.after==null?S.before:S.after)+'"><div class="scale"><span>Tout petit</span><span>Géant</span></div><p id="compare" aria-live="polite">'+compareText()+'</p></section>'+
+  avis()+finish(4)+'</div>'}
+};
+function tipsHTML(){
+  var on=CINE.filter(function(c){return S.cine[c.k]});
+  if(!on.length)return '<p class="note">Coche au moins un ingrédient pour recevoir ta piste.</p>';
+  return '<ul class="tips">'+on.map(function(c){return '<li><b>'+c.k+' :</b> '+c.tip+'</li>'}).join('')+'</ul>';
+}
+function compareText(){
+  if(S.after==null)return 'Déplace le curseur pour indiquer où tu en es.';
+  var d=S.before-S.after;
+  if(d>0)return 'Corti a rétréci de '+d+' point'+(d>1?'s':'')+'. Note ce qui a le mieux marché et garde-le.';
+  if(d===0)return 'Même taille qu’au départ. Ces gestes s’apprennent à force de répéter, et une journée chargée pèse aussi. Reviens en essayer un autre demain.';
+  return 'Corti a grossi. Ça arrive, certains jours sont plus durs et ce n’est pas un échec. Si ça dure, parles-en à quelqu’un.';
+}
+function cardText(){
+  var h=Object.keys(S.habits).filter(function(k){return S.habits[k]});
+  return {a:S.k1||'À compléter',b:S.k2||S.friend||'À compléter',c:h.length?h.join(' · '):'À choisir',d:S.k3||'À compléter'};
+}
+function renderCard(){
+  var el=document.getElementById('card');if(!el)return;var c=cardText();
+  el.innerHTML='<svg class="card-crab" viewBox="0 0 200 130" aria-hidden="true">'+crabMini(0,0,1)+'</svg><h3>Mon kit anti-pinces</h3><dl><div><dt>Quand ça monte</dt><dd>'+esc(c.a)+'</dd></div><div><dt>Ma phrase</dt><dd>'+esc(c.b)+'</dd></div><div><dt>Mes habitudes</dt><dd>'+esc(c.c)+'</dd></div><div><dt>Je peux parler à</dt><dd>'+esc(c.d)+'</dd></div></dl>';
+}
+
+/* Respiration */
+var B={dur:1,on:false,t:null,end:0};
+function breatheStop(msg){
+  B.on=false;clearTimeout(B.t);
+  var b=document.getElementById('bubble'),x=document.getElementById('btxt'),s=document.getElementById('bstart');
+  if(b)b.style.transform='scale(.38)';if(x)x.textContent=msg||'Prêt ?';if(s)s.textContent='Lancer la bulle';
+}
+function breatheCycle(inhale){
+  if(!B.on)return;
+  if(Date.now()>=B.end){breatheStop('Bien joué');return}
+  var b=document.getElementById('bubble'),x=document.getElementById('btxt');if(!b||!x){B.on=false;return}
+  b.style.transform=inhale?'scale(1)':'scale(.38)';x.textContent=inhale?'Inspire':'Expire';
+  B.t=setTimeout(function(){breatheCycle(!inhale)},5000);
+}
+var SENSES=['Cherche 5 choses que tu vois.','Sens 4 choses que tu touches : ta chaise, ton stylo, tes pieds sur le sol…','Écoute 3 bruits autour de toi.','Repère 2 odeurs, ou simplement l’air que tu respires.','Prends 1 grande inspiration et reviens à la première question.','Te revoilà dans la salle. Corti a lâché le plafond.'];
+var sIdx=-1;
+
+function render(){
+  breatheStop();sIdx=-1;
+  var id=(location.hash||'').slice(1);
+  if(VIEWS[id]){app.innerHTML=VIEWS[id]();renderCard();}
+  else home();
+  window.scrollTo(0,0);
+}
+function go(id){
+  if(('#'+id)===location.hash||(!id&&!location.hash)){render();return}
+  location.hash=id;
+  if(!id)render();
+}
+window.addEventListener('hashchange',render);
+
+document.addEventListener('click',function(ev){
+  var t=ev.target.closest('button');if(!t)return;
+  if(t.hasAttribute('data-go')){go(t.getAttribute('data-go'));return}
+  if(t.hasAttribute('data-help')||t.id==='helpbtn'){showHelp();return}
+  if(t.dataset.quiz){
+    var id=t.dataset.quiz,i=+t.dataset.i,j=+t.dataset.j,items=QUIZ[id];
+    S.game[id]=S.game[id]||{};S.game[id][i]=j;save();
+    var q=t.closest('.q');
+    q.querySelectorAll('.choice').forEach(function(b,k){b.disabled=true;if(k===items[i].a)b.classList.add('ok');else if(k===j)b.classList.add('ko')});
+    q.querySelector('.fb').innerHTML=(j===items[i].a?'<b>Bien vu.</b> ':'<b>Pas tout à fait.</b> ')+items[i].e;
+    document.getElementById('score-'+id).textContent=scoreText(id,items);if(id==='q2')document.getElementById('piles').innerHTML=pilesHTML();return;
+  }
+  if(t.dataset.reset){delete S.game[t.dataset.reset];save();var y=window.scrollY;render();window.scrollTo(0,y);return}
+  if(t.dataset.finish!=null){
+    var n=+t.dataset.finish;S.done[STEPS[n].id]=true;save();
+    go(STEPS[n+1]?STEPS[n+1].id:'');return;
+  }
+  if(t.dataset.dur){B.dur=+t.dataset.dur;document.querySelectorAll('[data-dur]').forEach(function(b){b.setAttribute('aria-pressed',b===t?'true':'false')});return}
+  if(t.id==='bstart'){
+    if(B.on){breatheStop();return}
+    B.on=true;B.end=Date.now()+B.dur*60000;t.textContent='Arrêter';breatheCycle(true);return;
+  }
+  if(t.id==='snext'){
+    sIdx=(sIdx+1)%SENSES.length;document.getElementById('sense').textContent=SENSES[sIdx];
+    t.textContent=sIdx===SENSES.length-1?'Recommencer':'Suivant';return;
+  }
+  if(t.id==='copy'){
+    var c=cardText(),txt='Mon kit anti-pinces\nQuand ça monte : '+c.a+'\nMa phrase : '+c.b+'\nMes habitudes : '+c.c+'\nJe peux parler à : '+c.d;
+    var out=document.getElementById('copied');
+    var fail=function(){out.textContent='La copie automatique ne marche pas ici. Sélectionne le texte de la carte à la main.'};
+    try{navigator.clipboard.writeText(txt).then(function(){out.textContent='Carte copiée.'},fail)}catch(e){fail()}
+  }
+});
+function showHelp(){
+  var h=document.getElementById('aide');
+  if(h){h.scrollIntoView({behavior:'smooth'});return}
+  location.hash='';render();setTimeout(function(){var a=document.getElementById('aide');if(a)a.scrollIntoView()},30);
+}
+document.addEventListener('input',function(ev){
+  var t=ev.target;
+  if(t.id==='recipe'){S.recipe=t.value;save()}
+  if(t.id==='act'){S.act=t.value;save()}
+  if(t.id==='thought'){S.thought=t.value;save()}
+  if(t.id==='friend'){S.friend=t.value;save()}
+  if(t.id==='k1'||t.id==='k2'||t.id==='k3'){S[t.id]=t.value;save();renderCard()}
+  if(t.id==='s-after'){
+    S.after=+t.value;save();
+    document.getElementById('v-after').textContent=S.after+' / 10';
+    document.getElementById('box-after').innerHTML=crabSVG('crab2',S.after);
+    document.getElementById('compare').textContent=compareText();
+  }
+});
+document.addEventListener('change',function(ev){
+  var t=ev.target;
+  if(t.dataset.cine){S.cine[t.dataset.cine]=t.checked;save();document.getElementById('tips').innerHTML=tipsHTML();document.getElementById('rbucket').innerHTML=recipeBucket()}
+  if(t.dataset.habit){S.habits[t.dataset.habit]=t.checked;save();renderCard()}
+});
+render();
+})();
+</script>
+</body>
+</html>
